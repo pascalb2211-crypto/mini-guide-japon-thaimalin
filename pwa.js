@@ -374,7 +374,7 @@
           var b2 = el('button', { type: 'button' }, '🗣️ Phrasier japonais'); b2.addEventListener('click', function(){ openPhrases(); });
           var b3 = el('button', { type: 'button' }, '🌐 Traducteur (Google Traduction)'); b3.addEventListener('click', function(){ window.open('https://translate.google.com/?sl=fr&tl=ja&op=translate', '_blank', 'noopener'); });
           var b0 = el('button', { type: 'button' }, '🗺️ Carte du Japon'); b0.addEventListener('click', function(){ sheet.classList.remove('open'); if(window.JaponMap) JaponMap.open(false); else location.href = 'page3.html'; });
-          l.appendChild(b0); [['🚄 Simulateur JR Pass','jrpass'],['🛍️ Détaxe : mode d’emploi','detaxe'],['✈️ Vols depuis La Réunion','vols'],['🏨 Taxes de séjour','taxes']].forEach(function(t){ var bt = el('button', { type: 'button' }, t[0]); bt.addEventListener('click', function(){ sheet.classList.remove('open'); if(window.JaponTools) JaponTools.open(t[1]); }); l.appendChild(bt); }); l.appendChild(b1); l.appendChild(b2); l.appendChild(b3); openSheet('Outils Japon', l);
+          l.appendChild(b0); [['📘 Fiches pratiques','fiches'],['🚄 Simulateur JR Pass','jrpass'],['🛍️ Détaxe : mode d’emploi','detaxe'],['✈️ Vols depuis La Réunion','vols'],['🏨 Taxes de séjour','taxes']].forEach(function(t){ var bt = el('button', { type: 'button' }, t[0]); bt.addEventListener('click', function(){ sheet.classList.remove('open'); if(window.JaponTools) JaponTools.open(t[1]); }); l.appendChild(bt); }); l.appendChild(b1); l.appendChild(b2); l.appendChild(b3); openSheet('Outils Japon', l);
         });
         function openConverter(){
           var RK = 'tm-jpy-rate', rate = parseFloat(ls(RK)) || 175, note;
