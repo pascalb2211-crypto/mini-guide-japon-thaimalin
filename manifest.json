@@ -1,7 +1,7 @@
 {
   "id": "./",
-  "name": "Japon Malin — Thaï Malin",
-  "short_name": "Japon Malin",
+  "name": "Mini Guide Malin · Japon",
+  "short_name": "Malin Japon",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

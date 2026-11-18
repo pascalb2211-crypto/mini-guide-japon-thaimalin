@@ -1,4 +1,4 @@
-/* Outils Japon Malin : simulateur JR Pass, détaxe, vols depuis La Réunion, taxes de séjour, liens d'affiliation.
+/* Outils Mini Guide Malin Japon : simulateur JR Pass, détaxe, vols depuis La Réunion, taxes de séjour, liens d'affiliation.
    Données vérifiées le 18 novembre 2026 (sources : JR Group / JR Central / Ekitan, Japan Tourism Agency & JNTO, Air Austral, villes de Tokyo et Kyoto). */
 (function(){
   var CSS = '#jtWrap{position:fixed;inset:0;z-index:100005;background:#0f1115;display:none;flex-direction:column;font-family:"Segoe UI",Arial,sans-serif;color:#fff}#jtWrap.on{display:flex}' +
@@ -271,7 +271,7 @@
   function trouve(){
     title.textContent = '🔎 Trouve mon vol';
     var d0 = new Date(); d0.setMonth(d0.getMonth() + 5); var iso = function(d){ return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); };
-    body.innerHTML = '<p>Dis-moi d’où tu pars et combien tu veux mettre : Japon Malin te dit si c’est réaliste, comment payer moins cher, et lance la recherche déjà remplie.</p>' +
+    body.innerHTML = '<p>Dis-moi d’où tu pars et combien tu veux mettre : Malin te dit si c’est réaliste, comment payer moins cher, et lance la recherche déjà remplie.</p>' +
       '<div class="card"><label>Je pars de</label><select id="fvO"><option value="RUN">La Réunion (Saint-Denis)</option><option value="PAR">Paris</option><option value="OTH">Autre ville de France</option></select>' +
       '<label>J’arrive à</label><select id="fvD"><option value="TYO">Tokyo</option><option value="OSA">Osaka (Kansai)</option></select>' +
       '<label>Départ le (une date approximative suffit)</label><input id="fvDate" type="date" value="' + iso(d0) + '">' +
@@ -290,7 +290,7 @@
       var cls = bud < low ? 'ko' : (bud < ok ? 'ok' : 'ok');
       var msg = bud < low ? 'Budget très serré : peu probable hors promotion.' : (bud < ok ? 'Budget tendu mais possible, surtout hors vacances et en réservant tôt.' : 'Budget confortable pour ce trajet.');
       h += '<div class="res ' + cls + '">' + msg + '<br><span class="small">Pour ' + px + ' voyageur' + (px > 1 ? 's' : '') + ' : ' + Math.round(bud * px) + ' € au total. Repère moyen par personne : ' + (o === 'RUN' ? 'environ 1 300 à 1 400 € depuis La Réunion' : 'environ 500 à 900 € hors vacances depuis Paris, plus en haute saison') + '. Prix indicatifs, ils changent chaque jour.</span></div>';
-      h += '<h4>Mon plan Japon Malin</h4><div class="card">';
+      h += '<h4>Mon plan Malin</h4><div class="card">';
       var tips = [];
       tips.push(sea === 'haute' ? '📅 Ton départ tombe en <b>haute saison</b> : décaler de 2 à 3 semaines peut faire baisser le prix.' : '📅 Ton départ est en <b>saison plus calme</b> : bon moment pour payer moins cher.');
       tips.push('⏰ Réserve <b>5 à 9 mois à l’avance</b> : réserver 6 semaines avant est souvent le pire moment.');

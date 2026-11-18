@@ -307,7 +307,7 @@
         { s: 'thailande', e: '🌴', t: 'Mini-guide Thaïlande', d: 'Bangkok, Chiang Mai, les îles', c: '#1676d2' },
         { s: 'vietnam', e: '🌿', t: 'Mini-guide Vietnam', d: 'Hanoï, Hội An, Saïgon', c: '#1fa66b' },
         { s: 'laos', e: '🐘', t: 'Mini-guide Laos', d: 'Luang Prabang, Vientiane', c: '#f07b22' },
-        { s: 'japon', e: '🗾', t: 'Japon Malin', d: 'Tokyo, Kyoto, Osaka, Fuji', c: '#b71c1c' },
+        { s: 'japon', e: '🗾', t: 'Mini Guide Malin · Japon', d: 'Tokyo, Kyoto, Osaka, Fuji', c: '#b71c1c' },
         { s: 'lagon-siam', e: '🌴', t: 'Du Lagon au Siam', d: 'Réunion, Bangkok, Chiang Mai, Krabi', c: '#a3174f' },
         { s: 'cambodge', e: '🛕', t: 'Mini-guide Cambodge', d: 'Angkor, Siem Reap', c: '#673ab7' },
         { s: 'bali', e: '🌺', t: 'Mini-guide Bali', d: 'Ubud, plages, rizières', c: '#ed4775' },
