@@ -267,5 +267,5 @@
   }
 
   var TOOLS = { fiches: fiches, f_gares: f_gares, f_distrib: f_distrib, f_toilettes: f_toilettes, f_consigne: f_consigne, f_onsen: f_onsen, f_manger: f_manger, f_secret: f_secret, f_insolite: f_insolite, jrpass: jrpass, detaxe: detaxe, vols: vols, taxes: taxes, affil: affil };
-  window.JaponTools = { open: function(n){ if(n.indexOf('city_') === 0){ if(window.CityGuide) CityGuide.open(n.slice(5)); return; } build(); body.oninput = body.onchange = null; if(!TOOLS[n]) return; TOOLS[n](); wrap.classList.add('on'); body.scrollTop = 0; document.documentElement.style.overflow = 'hidden'; } };
+  window.JaponTools = { open: function(n){ if(n.indexOf('app_') === 0){ if(window.JaponApp && JaponApp[n.slice(4)]) JaponApp[n.slice(4)](); return; } if(n.indexOf('city_') === 0){ if(window.CityGuide) CityGuide.open(n.slice(5)); return; } build(); body.oninput = body.onchange = null; if(!TOOLS[n]) return; TOOLS[n](); wrap.classList.add('on'); body.scrollTop = 0; document.documentElement.style.overflow = 'hidden'; } };
 })();

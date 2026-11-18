@@ -376,6 +376,7 @@
           var b0 = el('button', { type: 'button' }, '🗺️ Carte du Japon'); b0.addEventListener('click', function(){ sheet.classList.remove('open'); if(window.JaponMap) JaponMap.open(false); else location.href = 'page3.html'; });
           l.appendChild(b0); [['📘 Fiches pratiques','fiches'],['🚄 Simulateur JR Pass','jrpass'],['🛍️ Détaxe : mode d’emploi','detaxe'],['✈️ Vols depuis La Réunion','vols'],['🏨 Taxes de séjour','taxes']].forEach(function(t){ var bt = el('button', { type: 'button' }, t[0]); bt.addEventListener('click', function(){ sheet.classList.remove('open'); if(window.JaponTools) JaponTools.open(t[1]); }); l.appendChild(bt); }); l.appendChild(b1); l.appendChild(b2); l.appendChild(b3); openSheet('Outils Japon', l);
         });
+        window.JaponApp = { converter: function(){ openConverter(); }, phrases: function(){ openPhrases(); }, translator: function(){ window.open('https://translate.google.com/?sl=fr&tl=ja&op=translate', '_blank', 'noopener'); }, map: function(){ if(window.JaponMap) JaponMap.open(false); } };
         function openConverter(){
           var RK = 'tm-jpy-rate', rate = parseFloat(ls(RK)) || 175, note;
           var w = el('div', { 'class': 'tdCard' }, '<label>Euros (€)<input type="number" inputmode="decimal" id="cvE" placeholder="0" style="display:block;width:100%;margin-top:6px;padding:12px;border-radius:10px;border:1px solid #ffffff33;background:#242424;color:#fff;font-size:18px"></label><label style="margin-top:10px;display:block">Yens (¥)<input type="number" inputmode="decimal" id="cvY" placeholder="0" style="display:block;width:100%;margin-top:6px;padding:12px;border-radius:10px;border:1px solid #ffffff33;background:#242424;color:#fff;font-size:18px"></label><div class="tdSub" id="cvN" style="margin-top:10px"></div>');
@@ -452,7 +453,19 @@
      En dehors d'une case : agrandissement centré sur l'endroit touché. */
   var ZONES = null;
   function loadZones(){
-    try{ fetch('zones.json', { cache: 'no-cache' }).then(function(r){ return r.ok ? r.json() : null; }).then(function(j){ ZONES = j; }).catch(function(){}); }catch(e){}
+    try{ fetch('zones.json', { cache: 'no-cache' }).then(function(r){ return r.ok ? r.json() : null; }).then(function(j){ ZONES = j; badges(); }).catch(function(){}); }catch(e){}
+  }
+
+  function badges(){
+    try{
+      var img = document.querySelector('.page img'); var mm = location.pathname.match(/page(\d+)(\.html)?$/); if(!img || !mm || !ZONES) return; var zs = ZONES[parseInt(mm[1], 10)] || [];
+      var host = img.parentElement; if(getComputedStyle(host).position === 'static') host.style.position = 'relative';
+      var old = host.querySelectorAll('.tmBadge'); for(var i = 0; i < old.length; i++) old[i].remove();
+      var st = document.getElementById('tmBadgeCss'); if(!st){ st = document.createElement('style'); st.id = 'tmBadgeCss'; st.textContent = '.tmBadge{position:absolute;z-index:5;pointer-events:none;background:#d35400;color:#fff;font:700 10.5px/1 "Segoe UI",Arial,sans-serif;border-radius:999px;padding:4px 8px;box-shadow:0 2px 8px #0008;animation:tmPulse 2.2s ease-in-out infinite}@keyframes tmPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}'; document.head.appendChild(st); }
+      zs.forEach(function(z){ if(!z[4]) return; var has = false; z[4].forEach(function(l){ if(l[1].indexOf('tool:') === 0) has = true; }); if(!has) return;
+        var b = document.createElement('span'); b.className = 'tmBadge'; b.textContent = '👆 Fiche'; host.appendChild(b);
+        function pos(){ b.style.left = (img.offsetLeft + z[2] / 1024 * img.offsetWidth - b.offsetWidth - 6) + 'px'; b.style.top = (img.offsetTop + z[1] / 1536 * img.offsetHeight - 11) + 'px'; } pos(); if(img.complete === false) img.addEventListener('load', pos); window.addEventListener('resize', pos); });
+    }catch(e){}
   }
   function zoneAt(n, x, y){
     var zs = (ZONES && ZONES[n]) || []; var best = null, ba = 1e12;
