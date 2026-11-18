@@ -374,7 +374,7 @@
           var b2 = el('button', { type: 'button' }, '🗣️ Phrasier japonais'); b2.addEventListener('click', function(){ openPhrases(); });
           var b3 = el('button', { type: 'button' }, '🌐 Traducteur (Google Traduction)'); b3.addEventListener('click', function(){ window.open('https://translate.google.com/?sl=fr&tl=ja&op=translate', '_blank', 'noopener'); });
           var b0 = el('button', { type: 'button' }, '🗺️ Carte du Japon'); b0.addEventListener('click', function(){ sheet.classList.remove('open'); if(window.JaponMap) JaponMap.open(false); else location.href = 'page3.html'; });
-          l.appendChild(b0); l.appendChild(b1); l.appendChild(b2); l.appendChild(b3); openSheet('Outils Japon', l);
+          l.appendChild(b0); [['🚄 Simulateur JR Pass','jrpass'],['🛍️ Détaxe : mode d’emploi','detaxe'],['✈️ Vols depuis La Réunion','vols'],['🏨 Taxes de séjour','taxes']].forEach(function(t){ var bt = el('button', { type: 'button' }, t[0]); bt.addEventListener('click', function(){ sheet.classList.remove('open'); if(window.JaponTools) JaponTools.open(t[1]); }); l.appendChild(bt); }); l.appendChild(b1); l.appendChild(b2); l.appendChild(b3); openSheet('Outils Japon', l);
         });
         function openConverter(){
           var RK = 'tm-jpy-rate', rate = parseFloat(ls(RK)) || 175, note;
@@ -469,7 +469,7 @@
     zx.addEventListener('click', close); z.addEventListener('click', function(e){ if(e.target === z) close(); });
     img.addEventListener('click', function(e){
       var r = img.getBoundingClientRect(); var fx = (e.clientX - r.left) / r.width, fy = (e.clientY - r.top) / r.height;
-      var zone = zoneAt(n, fx * 1024, fy * 1536); zl.innerHTML = ''; if(zone && zone[4]){ zone[4].forEach(function(l){ var a = document.createElement('a'); a.href = l[1]; a.target = '_blank'; a.rel = 'noopener'; a.textContent = l[0]; zl.appendChild(a); }); }
+      var zone = zoneAt(n, fx * 1024, fy * 1536); zl.innerHTML = ''; if(zone && zone[4]){ zone[4].forEach(function(l){ var a = document.createElement('a'); a.textContent = l[0]; if(l[1].indexOf('tool:') === 0){ a.href = '#'; (function(t){ a.addEventListener('click', function(ev){ ev.preventDefault(); if(window.JaponTools) JaponTools.open(t); }); })(l[1].slice(5)); } else { a.href = l[1]; a.target = '_blank'; a.rel = 'noopener'; } zl.appendChild(a); }); }
       zi.style.width = ''; zi.src = img.currentSrc || img.src; z.classList.add('open'); document.documentElement.style.overflow = 'hidden';
       function place(){
         var VW = z.clientWidth || innerWidth, VH = z.clientHeight || innerHeight;
