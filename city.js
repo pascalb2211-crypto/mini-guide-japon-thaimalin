@@ -40,13 +40,13 @@
       chips('#cgD', ks.map(function(k){ return ['Jour ' + k, k]; }), function(k){ var h = '<div class="tl">'; D.days[k].forEach(function(s){ h += '<div class="st a"><div class="t">' + s.t + '</div><b>' + s.n + '</b><br><span class="small">' + s.d + '</span></div>'; }); bodyEl.querySelector('#cgI').innerHTML = h + '</div>'; stag(); }); },
     pra: function(){ var h = '<h4 class="a">🏨 Où dormir</h4>'; D.stay.forEach(function(e){ h += '<div class="card row a"><span class="ic">' + e.i + '</span><div><b>' + e.t + '</b><br>' + e.d + '</div></div>'; });
       h += '<h4 class="a">🍜 Manger</h4>'; D.eat.forEach(function(e){ h += '<div class="card row a"><span class="ic">' + e.i + '</span><div><b>' + e.t + '</b><br>' + e.d + '</div></div>'; });
-      h += '<h4 class="a">🚌 Se déplacer</h4><div class="card a"><b>Combien de trajets en bus aujourd’hui ?</b><input id="cgR" type="number" inputmode="numeric" value="4"><div id="cgRes"></div></div>';
+      h += '<h4 class="a">🚌 Se déplacer</h4>' + (D.calc ? '<div class="card a"><b>Combien de trajets aujourd’hui ?</b><input id="cgR" type="number" inputmode="numeric" value="4"><div id="cgRes"></div></div>' : '');
       D.move.forEach(function(m){ h += '<div class="card a">' + m + '</div>'; });
       if(D.tax) h += '<div class="card a"><b>Taxe de séjour</b><br>Calcule la tienne dans Outils → Taxes de séjour.</div>';
       bodyEl.innerHTML = h;
       function calc(){ var n = Math.max(0, parseInt(bodyEl.querySelector('#cgR').value, 10) || 0), p = n * D.calc.ride, c = D.calc.pass, r = bodyEl.querySelector('#cgRes');
-        r.innerHTML = n ? (p > c ? '<div class="res ok">✅ ' + D.calc.passName + ' (' + yen(c) + ') est rentable : tu économises ' + yen(p - c) + ' (≈ ' + jp(p - c) + ' €).</div>' : '<div class="res ko">Paie au trajet : ' + n + ' × ' + yen(D.calc.ride) + ' = ' + yen(p) + ', moins que le pass (' + yen(c) + ').</div>') + '<div class="small">Ajoute les trajets en métro pour affiner : le pass les couvre aussi.</div>' : ''; }
-      bodyEl.querySelector('#cgR').oninput = calc; calc(); },
+        r.innerHTML = n ? (p === c ? '<div class="res ok">Équivalent : ' + n + ' × ' + yen(D.calc.ride) + ' = ' + yen(p) + ', comme le pass (' + yen(c) + ').</div>' : p > c ? '<div class="res ok">✅ ' + D.calc.passName + ' (' + yen(c) + ') est rentable : tu économises ' + yen(p - c) + ' (≈ ' + jp(p - c) + ' €).</div>' : '<div class="res ko">Paie au trajet : ' + n + ' × ' + yen(D.calc.ride) + ' = ' + yen(p) + ', moins que le pass (' + yen(c) + ').</div>') + '<div class="small">Ajoute les trajets en métro pour affiner : le pass les couvre aussi.</div>' : ''; }
+      if(D.calc){ bodyEl.querySelector('#cgR').oninput = calc; calc(); } },
     ast: function(){ var h = ''; D.tips.forEach(function(e){ h += '<div class="card row a"><span class="ic">' + e.i + '</span><div><b>' + e.t + '</b><br>' + e.d + '</div></div>'; }); bodyEl.innerHTML = h; },
     res: function(){ var h = '<p class="a">Ces liens sont des liens d’affiliation : sans surcoût pour toi, ils aident à faire vivre le guide.</p>'; D.book.forEach(function(b){ h += '<a class="btn a" target="_blank" rel="noopener sponsored" href="' + b[1] + '">' + b[0] + '</a>'; }); bodyEl.innerHTML = h; }
   };
