@@ -32,7 +32,7 @@
     '.tmpwa-banner strong{display:block;color:#f0955a;font-size:15px}',
     '.tmpwa-go{background:linear-gradient(135deg,#d35400,#f0955a);color:#fff;border:0;border-radius:24px;padding:10px 16px;font-weight:700;font-size:14px;cursor:pointer;flex:none}',
     '.tmpwa-x{background:none;border:0;color:#aaa;font-size:20px;cursor:pointer;padding:4px 6px;flex:none}',
-    '.tmpwa-sheet{position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.7);display:flex;align-items:flex-end;justify-content:center;font-family:"Segoe UI",Arial,sans-serif}',
+    '.tmpwa-sheet{position:fixed;inset:0;z-index:100010;background:rgba(0,0,0,.7);display:flex;align-items:flex-end;justify-content:center;font-family:"Segoe UI",Arial,sans-serif}',
     '.tmpwa-box{background:#1a1d24;border:1px solid #333;border-radius:20px 20px 0 0;padding:24px 22px max(24px,env(safe-area-inset-bottom));max-width:520px;width:100%;color:#fff}',
     '.tmpwa-box h3{margin:0 0 12px;color:#f0955a;font-size:20px}',
     '.tmpwa-box ol{margin:0 0 16px;padding-left:20px;line-height:1.7;color:#dcd6d0}',
@@ -376,8 +376,8 @@
           var b0 = el('button', { type: 'button' }, '🗺️ Carte du Japon'); b0.addEventListener('click', function(){ sheet.classList.remove('open'); if(window.JaponMap) JaponMap.open(false); else location.href = 'page3.html'; });
           l.appendChild(b0); [['📘 Fiches pratiques','fiches'],['🚄 Simulateur JR Pass','jrpass'],['🛍️ Détaxe : mode d’emploi','detaxe'],['✈️ Vols depuis La Réunion','vols'],['🏨 Taxes de séjour','taxes']].forEach(function(t){ var bt = el('button', { type: 'button' }, t[0]); bt.addEventListener('click', function(){ sheet.classList.remove('open'); if(window.JaponTools) JaponTools.open(t[1]); }); l.appendChild(bt); }); l.appendChild(b1); l.appendChild(b2); l.appendChild(b3); openSheet('Outils Japon', l);
         });
-        window.JaponApp = { converter: function(){ openConverter(); }, phrases: function(){ openPhrases(); }, translator: function(){ window.open('https://translate.google.com/?sl=fr&tl=ja&op=translate', '_blank', 'noopener'); }, map: function(){ if(window.JaponMap) JaponMap.open(false); } };
-        function openConverter(){
+        window.JaponApp = { converter: function(y){ openConverter(y); }, phrases: function(){ openPhrases(); }, translator: function(){ window.open('https://translate.google.com/?sl=fr&tl=ja&op=translate', '_blank', 'noopener'); }, map: function(){ if(window.JaponMap) JaponMap.open(false); } };
+        function openConverter(pre){
           var RK = 'tm-jpy-rate', rate = parseFloat(ls(RK)) || 175, note;
           var w = el('div', { 'class': 'tdCard' }, '<label>Euros (€)<input type="number" inputmode="decimal" id="cvE" placeholder="0" style="display:block;width:100%;margin-top:6px;padding:12px;border-radius:10px;border:1px solid #ffffff33;background:#242424;color:#fff;font-size:18px"></label><label style="margin-top:10px;display:block">Yens (¥)<input type="number" inputmode="decimal" id="cvY" placeholder="0" style="display:block;width:100%;margin-top:6px;padding:12px;border-radius:10px;border:1px solid #ffffff33;background:#242424;color:#fff;font-size:18px"></label><div class="tdSub" id="cvN" style="margin-top:10px"></div>');
           var E = w.querySelector('#cvE'), Y = w.querySelector('#cvY'); note = w.querySelector('#cvN');
@@ -390,6 +390,7 @@
             .catch(function(){ return fetch('https://open.er-api.com/v6/latest/EUR').then(function(r){ return r.json(); }).then(function(d){ if(!ok(d.rates.JPY)) throw 0; }); })
             .catch(function(){ setNote('Hors connexion : taux enregistré, 1 € ≈ ' + Math.round(rate) + ' ¥. Pense : 1 000 ¥ ≈ ' + (Math.round(1000 / rate * 100) / 100) + ' €'); });
           openSheet('Euro ⇄ Yen', w);
+          if(pre > 0){ Y.value = pre; Y.dispatchEvent(new Event('input')); }
         }
         function openPhrases(){
           var l = el('div', { 'class': 'list' });

@@ -321,3 +321,42 @@
   var TOOLS = { trouve: trouve, fiches: fiches, f_gares: f_gares, f_distrib: f_distrib, f_toilettes: f_toilettes, f_consigne: f_consigne, f_onsen: f_onsen, f_manger: f_manger, f_secret: f_secret, f_insolite: f_insolite, jrpass: jrpass, detaxe: detaxe, vols: vols, taxes: taxes, affil: affil };
   window.JaponTools = { open: function(n){ if(n.indexOf('app_') === 0){ if(window.JaponApp && JaponApp[n.slice(4)]) JaponApp[n.slice(4)](); return; } if(n.indexOf('city_') === 0){ if(window.CityGuide){ var pr = n.slice(5).split('@'); CityGuide.open(pr[0], pr[1]); } return; } build(); body.oninput = body.onchange = null; if(!TOOLS[n]) return; TOOLS[n](); wrap.classList.add('on'); body.scrollTop = 0; document.documentElement.style.overflow = 'hidden'; } };
 })();
+
+/* Icône 💱 après chaque prix en yens -> ouvre le convertisseur */
+(function(){
+  var css = document.createElement('style');
+  css.textContent = '.yl{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;margin:0 2px 0 4px;border-radius:50%;background:#d3540033;border:1px solid #d35400;font-size:11px;line-height:1;cursor:pointer;vertical-align:middle;text-decoration:none;-webkit-tap-highlight-color:transparent}.yl:active{transform:scale(.9)}';
+  document.head.appendChild(css);
+  var RX = /(\d[\d   ]*\d|\d)(\s*(?:à|–|-)\s*(?:\d[\d   ]*\d|\d))?\s*(?:¥|yens?\b)/g;
+  var SKIP = /^(BUTTON|INPUT|SELECT|OPTION|TEXTAREA|SCRIPT|STYLE|A)$/;
+  function scan(root){
+    if(!root) return;
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), list = [], n;
+    while((n = w.nextNode())){
+      var p = n.parentNode; if(!p || SKIP.test(p.nodeName) || (p.closest && p.closest('.yl,button,select,a'))) continue;
+      RX.lastIndex = 0; var mm = RX.exec(n.nodeValue); if(!mm) continue;
+      var ns = n.nextSibling; if(ns && ns.className === 'yl' && mm.index + mm[0].length === n.nodeValue.length && !RX.exec(n.nodeValue)) continue;
+      list.push(n);
+    }
+    list.forEach(function(t){
+      var s = t.nodeValue, f = document.createDocumentFragment(), last = 0, m; RX.lastIndex = 0;
+      while((m = RX.exec(s))){
+        var end = m.index + m[0].length;
+        f.appendChild(document.createTextNode(s.slice(last, end)));
+        var b = document.createElement('span'); b.className = 'yl'; b.setAttribute('role', 'button'); b.setAttribute('aria-label', 'Convertir en euros'); b.textContent = '💱';
+        b.setAttribute('data-y', m[1].replace(/[^\d]/g, ''));
+        f.appendChild(b); last = end;
+      }
+      f.appendChild(document.createTextNode(s.slice(last)));
+      t.parentNode.replaceChild(f, t);
+    });
+  }
+  document.addEventListener('click', function(e){
+    var b = e.target.closest && e.target.closest('.yl'); if(!b) return;
+    e.preventDefault(); e.stopPropagation();
+    if(window.JaponApp) JaponApp.converter(parseFloat(b.getAttribute('data-y')) || 0);
+  }, true);
+  var busy = false, tm = 0;
+  function run(){ busy = true; try{ scan(document.getElementById('jtWrap')); scan(document.getElementById('cgWrap')); }catch(e){} busy = false; }
+  new MutationObserver(function(){ if(busy) return; clearTimeout(tm); tm = setTimeout(run, 30); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+})();
