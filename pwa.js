@@ -444,6 +444,8 @@
       }));
     }
     document.body.appendChild(bar); document.body.classList.add('tmHasTab');
+    function fixPad(){ try{ document.body.style.setProperty('padding-bottom', (bar.offsetHeight + 18) + 'px', 'important'); }catch(e){} }
+    fixPad(); window.addEventListener('resize', fixPad); window.addEventListener('load', fixPad); setTimeout(fixPad, 600);
   }
 
   /* Agrandissement : un appui sur une case de la page l'ouvre seule, en grand (zones dans zones.json).

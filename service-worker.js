@@ -6,7 +6,7 @@
    Si vous ajoutez une page ou une image NOUVELLE, ajoutez-la aux listes ci-dessous
    (ou relancez l'outil de conversion) pour qu'elle soit aussi téléchargée d'avance.
 ================================================================================ */
-const CACHE = 'tm-mg-japon-v7';
+const CACHE = 'tm-mg-japon-v8';
 const CORE = [
   "./",
   "index.html",
