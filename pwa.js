@@ -270,6 +270,36 @@
         };
       }
 
+
+      /* ---------- Bandeau météo sous l'image (comble le vide, ville de la page en premier) ---------- */
+      if(WX){
+        (function(){
+          var pl = WX.split(';').map(function(x){ var a = x.split(':'); var c = a[1].split(','); return { n: a[0], la: c[0], lo: c[1] }; });
+          var CITY_OF = { 20: 'Tokyo', 21: 'Tokyo', 22: 'Hakone', 23: 'Kyoto', 24: 'Kyoto', 25: 'Nara' };
+          var first = CITY_OF[cur]; if(first){ pl.sort(function(a, b){ return (a.n === first ? -1 : 0) - (b.n === first ? -1 : 0); }); }
+          var strip = el('div', { id: 'tmWx' }); strip.innerHTML = '<div class="wxH">🌤️ Météo au Japon · touche pour le détail</div><div class="wxR"></div>';
+          var st2 = document.createElement('style'); st2.textContent = '#tmWx{width:100%;max-width:680px;margin:10px auto 0;padding:0 14px;font-family:"Segoe UI",Arial,sans-serif;color:#fff}#tmWx .wxH{font-size:12px;opacity:.65;margin:0 2px 6px}#tmWx .wxR{display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}#tmWx .wxC{flex:0 0 auto;min-width:88px;background:#1a1d24;border:1px solid #ffffff22;border-radius:14px;padding:9px 10px;text-align:center;font-size:12px;line-height:1.35;cursor:pointer}#tmWx .wxC b{display:block;font-size:13px}#tmWx .wxC .t{font-size:20px;font-weight:800;display:block;margin:2px 0}#tmWx .wxC.on{border-color:#d35400}';
+          document.head.appendChild(st2);
+          var nav = document.querySelector('.navbar'); (nav ? nav.parentNode : document.body).insertBefore(strip, nav ? nav.nextSibling : null);
+          var row = strip.querySelector('.wxR');
+          var icoW = function(c){ return c === 0 ? '☀️' : c < 3 ? '⛅' : c < 4 ? '☁️' : c < 50 ? '🌫️' : c < 70 ? '🌧️' : c < 80 ? '🌨️' : c < 85 ? '🌦️' : c < 95 ? '🌧️' : '⛈️'; };
+          function draw(arr){
+            row.innerHTML = '';
+            pl.forEach(function(p){
+              var d = arr[pl.indexOf(p)] || arr[0]; if(!d) return; var c = d.current, dl = d.daily;
+              var card = el('div', { 'class': 'wxC' + (p.n === first ? ' on' : '') }, '<b>' + p.n + '</b><span class="t">' + icoW(c.weather_code) + ' ' + Math.round(c.temperature_2m) + '°</span>' + Math.round(dl.temperature_2m_min[0]) + '–' + Math.round(dl.temperature_2m_max[0]) + '° · 💧' + (dl.precipitation_probability_max[0] || 0) + '%');
+              card.addEventListener('click', function(){ if(openWeather) openWeather(); });
+              row.appendChild(card);
+            });
+          }
+          var WK = 'tm-wx-' + slug + '-' + pl[0].n;
+          try{ var old = JSON.parse(localStorage.getItem(WK) || 'null'); if(old && old.length === pl.length) draw(old); else row.innerHTML = '<span style="opacity:.6;font-size:13px">Chargement…</span>'; }catch(e){}
+          fetch('https://api.open-meteo.com/v1/forecast?latitude=' + pl.map(function(p){ return p.la; }).join(',') + '&longitude=' + pl.map(function(p){ return p.lo; }).join(',') + '&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&forecast_days=1')
+            .then(function(r){ return r.json(); }).then(function(d){ var arr = Array.isArray(d) ? d : [d]; draw(arr); try{ localStorage.setItem(WK, JSON.stringify(arr)); }catch(e){} })
+            .catch(function(){ if(!row.children.length) row.innerHTML = '<span style="opacity:.6;font-size:13px">La météo s’affiche quand tu as du réseau.</span>'; });
+        })();
+      }
+
       /* ---------- « Aujourd'hui » : statut du voyage, destination du jour, météo, favoris, inspirations ---------- */
       var COUNTRY = (me.getAttribute('data-name') || '').replace(/^Mini-guide\s*/i, '');
       var PLACES = WX ? WX.split(';').map(function(x){ var a = x.split(':'); var c = a[1].split(','); return { n: a[0], la: c[0], lo: c[1] }; }) : [];
