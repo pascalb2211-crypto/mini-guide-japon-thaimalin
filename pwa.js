@@ -469,7 +469,7 @@
     zx.addEventListener('click', close); z.addEventListener('click', function(e){ if(e.target === z) close(); });
     img.addEventListener('click', function(e){
       var r = img.getBoundingClientRect(); var fx = (e.clientX - r.left) / r.width, fy = (e.clientY - r.top) / r.height;
-      var zone = zoneAt(n, fx * 1024, fy * 1536); zl.innerHTML = ''; if(zone && zone[4]){ zone[4].forEach(function(l){ var a = document.createElement('a'); a.textContent = l[0]; if(l[1].indexOf('tool:') === 0){ a.href = '#'; (function(t){ a.addEventListener('click', function(ev){ ev.preventDefault(); if(window.JaponTools) JaponTools.open(t); }); })(l[1].slice(5)); } else { a.href = l[1]; a.target = '_blank'; a.rel = 'noopener'; } zl.appendChild(a); }); }
+      var zone = zoneAt(n, fx * 1024, fy * 1536); zl.innerHTML = ''; if(zone && zone[4]){ for(var q = 0; q < zone[4].length; q++){ if(zone[4][q][1].indexOf('tool:') === 0 && window.JaponTools){ JaponTools.open(zone[4][q][1].slice(5)); return; } } } if(zone && zone[4]){ zone[4].forEach(function(l){ var a = document.createElement('a'); a.textContent = l[0]; if(l[1].indexOf('tool:') === 0){ a.href = '#'; (function(t){ a.addEventListener('click', function(ev){ ev.preventDefault(); if(window.JaponTools) JaponTools.open(t); }); })(l[1].slice(5)); } else { a.href = l[1]; a.target = '_blank'; a.rel = 'noopener'; } zl.appendChild(a); }); }
       zi.style.width = ''; zi.src = img.currentSrc || img.src; z.classList.add('open'); document.documentElement.style.overflow = 'hidden';
       function place(){
         var VW = z.clientWidth || innerWidth, VH = z.clientHeight || innerHeight;
