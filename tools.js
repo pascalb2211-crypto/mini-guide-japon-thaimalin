@@ -140,7 +140,7 @@
 
   function fiches(){
     title.textContent = '📘 Fiches pratiques';
-    var L = [['f_gares','🚉','Décodeur des gares','Lignes, quais, sorties, carte IC'],['f_distrib','🥤','Distributeurs','Chaud ou froid, comment ça marche'],['f_toilettes','🚽','Toilettes japonaises','Le tableau de commandes, touche par touche'],['f_consigne','🧳','Consignes à bagages','Calcule le coût de tes valises'],['f_onsen','♨️','Onsen adapté','Tatouages, règles, check-list'],['f_manger','🍜','Manger comme un Japonais','Bons plans et mots à connaître'],['f_secret','⛩️','Le Japon secret','Escapades loin des foules'],['f_insolite','🎎','Expériences insolites','Ta liste à cocher']];
+    var L = [['city_kyoto','🏯','Guide de Kyoto','Temples, itinéraires, bus : tout en un'],['f_gares','🚉','Décodeur des gares','Lignes, quais, sorties, carte IC'],['f_distrib','🥤','Distributeurs','Chaud ou froid, comment ça marche'],['f_toilettes','🚽','Toilettes japonaises','Le tableau de commandes, touche par touche'],['f_consigne','🧳','Consignes à bagages','Calcule le coût de tes valises'],['f_onsen','♨️','Onsen adapté','Tatouages, règles, check-list'],['f_manger','🍜','Manger comme un Japonais','Bons plans et mots à connaître'],['f_secret','⛩️','Le Japon secret','Escapades loin des foules'],['f_insolite','🎎','Expériences insolites','Ta liste à cocher']];
     body.innerHTML = '<p>Appuie sur une fiche. Les cases cochées sont gardées sur ton téléphone.</p>';
     L.forEach(function(x){ var b = document.createElement('button'); b.type = 'button'; b.className = 'fl'; b.innerHTML = '<span class="e">' + x[1] + '</span><span>' + x[2] + '<small>' + x[3] + '</small></span>'; b.onclick = function(){ window.JaponTools.open(x[0]); }; body.appendChild(b); });
   }
@@ -267,5 +267,5 @@
   }
 
   var TOOLS = { fiches: fiches, f_gares: f_gares, f_distrib: f_distrib, f_toilettes: f_toilettes, f_consigne: f_consigne, f_onsen: f_onsen, f_manger: f_manger, f_secret: f_secret, f_insolite: f_insolite, jrpass: jrpass, detaxe: detaxe, vols: vols, taxes: taxes, affil: affil };
-  window.JaponTools = { open: function(n){ build(); body.oninput = body.onchange = null; if(!TOOLS[n]) return; TOOLS[n](); wrap.classList.add('on'); body.scrollTop = 0; document.documentElement.style.overflow = 'hidden'; } };
+  window.JaponTools = { open: function(n){ if(n.indexOf('city_') === 0){ if(window.CityGuide) CityGuide.open(n.slice(5)); return; } build(); body.oninput = body.onchange = null; if(!TOOLS[n]) return; TOOLS[n](); wrap.classList.add('on'); body.scrollTop = 0; document.documentElement.style.overflow = 'hidden'; } };
 })();
