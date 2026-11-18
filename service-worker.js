@@ -6,7 +6,7 @@
    Si vous ajoutez une page ou une image NOUVELLE, ajoutez-la aux listes ci-dessous
    (ou relancez l'outil de conversion) pour qu'elle soit aussi téléchargée d'avance.
 ================================================================================ */
-const CACHE = 'tm-mg-japon-v22';
+const CACHE = 'tm-mg-japon-v23';
 const CORE = [
   "./",
   "index.html",
@@ -56,6 +56,7 @@ const CORE = [
   "page30.html",
   "page31.html",
   "page32.html",
+  "page33.html",
                                               "icons/icon-192.png",
   "icons/icon-512.png",
   "icons/icon-maskable-512.png",
@@ -94,7 +95,8 @@ const IMAGES = [
   "images/page29.webp",
   "images/page30.webp",
   "images/page31.webp",
-  "images/page32.webp"
+  "images/page32.webp",
+  "images/page33.webp"
 ];
 
 async function clean(res){
