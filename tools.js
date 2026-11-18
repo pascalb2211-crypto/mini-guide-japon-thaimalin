@@ -143,7 +143,7 @@
 
   function fiches(){
     title.textContent = '📘 Fiches pratiques';
-    var L = [['city_tokyo','🗼','Guide de Tokyo','3 jours, réservations, métro'],['city_osaka','🍢','Guide d’Osaka','Manger, marcher, passes'],['city_fuji','🗻','Fuji et Hakone','Boucle, onsen, ascension'],['city_nara','🦌','Guide de Nara','Cerfs, Todai-ji, demi-journée'],['city_hiroshima','🕊️','Hiroshima et Miyajima','Mémoire, île sacrée, ferry'],['trouve','🔎','Trouve mon vol','Budget, conseils et recherche pré-remplie'],['city_reunion','🇷🇪','Départ de La Réunion','Vols, prix, bagages, escale, heure'],['city_kyoto','🏯','Guide de Kyoto','Temples, itinéraires, bus : tout en un'],['f_gares','🚉','Décodeur des gares','Lignes, quais, sorties, carte IC'],['f_distrib','🥤','Distributeurs','Chaud ou froid, comment ça marche'],['f_toilettes','🚽','Toilettes japonaises','Le tableau de commandes, touche par touche'],['f_consigne','🧳','Consignes à bagages','Calcule le coût de tes valises'],['f_onsen','♨️','Onsen adapté','Tatouages, règles, check-list'],['f_manger','🍜','Manger comme un Japonais','Bons plans et mots à connaître'],['f_secret','⛩️','Le Japon secret','Escapades loin des foules'],['f_insolite','🎎','Expériences insolites','Ta liste à cocher']];
+    var L = [['f_urgence','🆘','Urgences','Numéros, ambassade, perdu, santé'],['city_tokyo','🗼','Guide de Tokyo','3 jours, réservations, métro'],['city_osaka','🍢','Guide d’Osaka','Manger, marcher, passes'],['city_fuji','🗻','Fuji et Hakone','Boucle, onsen, ascension'],['city_nara','🦌','Guide de Nara','Cerfs, Todai-ji, demi-journée'],['city_hiroshima','🕊️','Hiroshima et Miyajima','Mémoire, île sacrée, ferry'],['trouve','🔎','Trouve mon vol','Budget, conseils et recherche pré-remplie'],['city_reunion','🇷🇪','Départ de La Réunion','Vols, prix, bagages, escale, heure'],['city_kyoto','🏯','Guide de Kyoto','Temples, itinéraires, bus : tout en un'],['f_gares','🚉','Décodeur des gares','Lignes, quais, sorties, carte IC'],['f_distrib','🥤','Distributeurs','Chaud ou froid, comment ça marche'],['f_toilettes','🚽','Toilettes japonaises','Le tableau de commandes, touche par touche'],['f_consigne','🧳','Consignes à bagages','Calcule le coût de tes valises'],['f_onsen','♨️','Onsen adapté','Tatouages, règles, check-list'],['f_manger','🍜','Manger comme un Japonais','Bons plans et mots à connaître'],['f_secret','⛩️','Le Japon secret','Escapades loin des foules'],['f_insolite','🎎','Expériences insolites','Ta liste à cocher']];
     body.innerHTML = '<p>Appuie sur une fiche. Les cases cochées sont gardées sur ton téléphone.</p>';
     L.forEach(function(x){ var b = document.createElement('button'); b.type = 'button'; b.className = 'fl'; b.innerHTML = '<span class="e">' + x[1] + '</span><span>' + x[2] + '<small>' + x[3] + '</small></span>'; b.onclick = function(){ window.JaponTools.open(x[0]); }; body.appendChild(b); });
   }
@@ -262,6 +262,21 @@
   }
 
   /* 8. Insolite */
+  function f_urgence(){
+    title.textContent = '🆘 Urgences au Japon';
+    var ck = checklist('urgence', ['<b>Copie de ton passeport</b> : une dans ton sac, une à la maison','<b>Assurance voyage</b> : numéro du contrat noté dans ton téléphone','<b>Adresse de l’hôtel</b> écrite en japonais et en capture d’écran','<b>Sorties de secours</b> repérées à ton arrivée à l’hôtel'], 'prêt');
+    body.innerHTML = '<p>Appuie sur un bouton pour appeler. Les appels aux numéros d’urgence sont gratuits, même depuis un téléphone public.</p>' +
+      '<a class="btn" href="tel:110">🚓 Police : 110</a>' +
+      '<a class="btn" href="tel:119">🚑 Ambulance et pompiers : 119</a>' +
+      '<a class="btn" href="tel:0335010110">🗣️ Police en anglais (Tokyo) : 03-3501-0110</a>' +
+      '<a class="btn" href="tel:+81357986000">🇫🇷 Ambassade de France : 03-5798-6000</a>' +
+      '<div class="small">Depuis l’étranger : +81 3 5798 6000. Accueil : lundi au vendredi, 9 h à 12 h 30 et 14 h à 17 h. Adresse : 4-11-44 Minami-Azabu, Minato-ku, Tokyo.</div>' +
+      '<h4>Perdu ou besoin d’aide ?</h4><div class="card small">Va au <b>koban</b> (petit poste de police de quartier) le plus proche, ou demande à la réception de ton hôtel. Les Japonais rendent très souvent les objets perdus.</div>' +
+      '<div class="card small"><b>Santé :</b> sans assurance, tu paies tout sur place, sans certitude d’être remboursé ensuite. Garde tous tes papiers et factures.</div>' +
+      '<h4>Avant de partir</h4>' + ck.html +
+      '<div class="small">Numéros vérifiés en novembre 2026. Application officielle « Japan Safe Travel » : alertes séisme et météo.</div>';
+    ck.bind(); backBtn();
+  }
   function f_insolite(){
     title.textContent = '🎎 Expériences insolites';
     var ck = checklist('insolite', ['<b>Gachapon</b> : distributeurs de petites capsules surprises','<b>Hôtel capsule</b> : dormir dans un espace compact et original','<b>Café à thème</b> : un lieu insolite à découvrir','<b>Atelier artisanal</b> : une activité traditionnelle','<b>Train panoramique</b> : les paysages autrement','<b>Location de kimono</b> : balade dans un quartier historique','<b>Karaoké japonais</b> : une soirée à la japonaise','<b>Salle d’arcade</b> : les immenses salles de jeux'], 'expériences testées');
@@ -318,7 +333,7 @@
     body.oninput = calc; body.onchange = calc; calc();
   }
 
-  var TOOLS = { trouve: trouve, fiches: fiches, f_gares: f_gares, f_distrib: f_distrib, f_toilettes: f_toilettes, f_consigne: f_consigne, f_onsen: f_onsen, f_manger: f_manger, f_secret: f_secret, f_insolite: f_insolite, jrpass: jrpass, detaxe: detaxe, vols: vols, taxes: taxes, affil: affil };
+  var TOOLS = { f_urgence: f_urgence, trouve: trouve, fiches: fiches, f_gares: f_gares, f_distrib: f_distrib, f_toilettes: f_toilettes, f_consigne: f_consigne, f_onsen: f_onsen, f_manger: f_manger, f_secret: f_secret, f_insolite: f_insolite, jrpass: jrpass, detaxe: detaxe, vols: vols, taxes: taxes, affil: affil };
   window.JaponTools = { open: function(n){ if(n.indexOf('app_') === 0){ if(window.JaponApp && JaponApp[n.slice(4)]) JaponApp[n.slice(4)](); return; } if(n.indexOf('city_') === 0){ if(window.CityGuide){ var pr = n.slice(5).split('@'); CityGuide.open(pr[0], pr[1]); } return; } build(); body.oninput = body.onchange = null; if(!TOOLS[n]) return; TOOLS[n](); wrap.classList.add('on'); body.scrollTop = 0; document.documentElement.style.overflow = 'hidden'; } };
 })();
 
