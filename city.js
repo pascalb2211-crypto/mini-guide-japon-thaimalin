@@ -26,7 +26,7 @@
   function chips(sel, opts, cb){ var box = bodyEl.querySelector(sel); box.innerHTML = ''; opts.forEach(function(o, i){ var b = document.createElement('button'); b.type = 'button'; b.className = 'chip' + (i === 0 ? ' on' : ''); b.textContent = o[0]; b.onclick = function(){ Array.prototype.forEach.call(box.children, function(c){ c.classList.remove('on'); }); b.classList.add('on'); cb(o[1]); }; box.appendChild(b); }); cb(opts[0][1]); }
 
   var TABS = [['ess','L’essentiel'],['voir','À voir'],['iti','Itinéraire'],['pra','Pratique'],['ast','Astuces'],['res','Réserver']];
-  function R(id){ bodyEl.scrollTop = 0; Array.prototype.forEach.call(tabsEl.children, function(b){ b.classList.toggle('on', b.getAttribute('data-id') === id); }); VIEW[id](); stag(); }
+  function R(id){ bodyEl.scrollTop = 0; Array.prototype.forEach.call(tabsEl.children, function(b){ b.classList.toggle('on', b.getAttribute('data-id') === id); }); if(D.tabs){ var tt = D.tabs.filter(function(t){ return t.id === id; })[0]; blocksView(tt); } else VIEW[id](); stag(); }
   var VIEW = {
     ess: function(){ var h = '<div class="hero a"><b>' + D.emoji + ' ' + D.name + '</b><br>' + D.tagline + '</div>'; D.essential.forEach(function(e){ h += '<div class="card row a"><span class="ic">' + e.i + '</span><div><b>' + e.t + '</b><br>' + e.d + '</div></div>'; });
       h += '<div class="small a">Infos vérifiées en ' + D.checked + '. Prix et horaires peuvent changer : vérifie avant de partir.</div>'; bodyEl.innerHTML = h; },
@@ -50,7 +50,26 @@
     ast: function(){ var h = ''; D.tips.forEach(function(e){ h += '<div class="card row a"><span class="ic">' + e.i + '</span><div><b>' + e.t + '</b><br>' + e.d + '</div></div>'; }); bodyEl.innerHTML = h; },
     res: function(){ var h = '<p class="a">Ces liens sont des liens d’affiliation : sans surcoût pour toi, ils aident à faire vivre le guide.</p>'; D.book.forEach(function(b){ h += '<a class="btn a" target="_blank" rel="noopener sponsored" href="' + b[1] + '">' + b[0] + '</a>'; }); bodyEl.innerHTML = h; }
   };
-  function show(id){ D = cache[id]; D.id = id; titleEl.textContent = D.emoji + ' ' + D.name; tabsEl.innerHTML = ''; TABS.forEach(function(t){ var b = document.createElement('button'); b.type = 'button'; b.setAttribute('data-id', t[0]); b.textContent = t[1]; b.onclick = function(){ R(t[0]); }; tabsEl.appendChild(b); }); wrap.classList.add('on'); document.documentElement.style.overflow = 'hidden'; R('ess'); }
-  window.CityGuide = { open: function(id){ build(); if(cache[id]){ show(id); return; }
-    fetch('data/' + id + '.json').then(function(r){ return r.json(); }).then(function(j){ cache[id] = j; show(id); }).catch(function(){ build(); titleEl.textContent = 'Guide indisponible'; bodyEl.innerHTML = '<p>Impossible de charger ce guide hors ligne pour l’instant. Ouvre l’appli une fois avec du réseau.</p>'; wrap.classList.add('on'); }); } };
+
+  function blocksView(tab){
+    var h = '';
+    tab.b.forEach(function(b, bi){
+      if(b.k === 'cards') b.items.forEach(function(e){ h += '<div class="card row a"><span class="ic">' + e.i + '</span><div><b>' + e.t + '</b><br>' + e.d + '</div></div>'; });
+      else if(b.k === 'check'){ h += '<div class="bar a"><b id="cgCb' + bi + '"></b></div><div class="small a" id="cgCn' + bi + '"></div>'; b.items.forEach(function(t, i){ h += '<button type="button" class="card site a" data-b="' + bi + '" data-i="' + i + '"><span>' + t + '</span></button>'; }); }
+      else if(b.k === 'sum'){ h += '<h4 class="a">' + b.title + '</h4><div class="card a">'; b.fields.forEach(function(f, i){ h += '<div class="small" style="margin-top:8px">' + f[0] + '</div><input class="cgSum" type="number" inputmode="decimal" value="' + f[1] + '">'; }); h += '<div id="cgSumR" class="res ok"></div></div>'; }
+      else if(b.k === 'clock'){ h += '<h4 class="a">Convertisseur d’heure</h4><div class="card a"><div class="small">Il est (heure de La Réunion) :</div><input id="cgClk" type="time" value="20:00"><div id="cgClkR" style="margin-top:10px"></div></div>'; }
+      else if(b.k === 'links'){ h += '<p class="a">Ces liens sont des liens d’affiliation : sans surcoût pour toi, ils aident à faire vivre le guide.</p>'; D.book.forEach(function(x){ h += '<a class="btn a" target="_blank" rel="noopener sponsored" href="' + x[1] + '">' + x[0] + '</a>'; }); }
+    });
+    bodyEl.innerHTML = h;
+    tab.b.forEach(function(b, bi){
+      if(b.k === 'check'){ var key = 'chk-' + D.id + '-' + b.key;
+        function paint(){ var d = store(key), n = 0; Array.prototype.forEach.call(bodyEl.querySelectorAll('.site[data-b="' + bi + '"]'), function(x){ var on = !!d[x.getAttribute('data-i')]; x.classList.toggle('done', on); if(on) n++; }); bodyEl.querySelector('#cgCb' + bi).style.width = (100 * n / b.items.length) + '%'; bodyEl.querySelector('#cgCn' + bi).textContent = n + ' / ' + b.items.length + ' ' + b.label; }
+        Array.prototype.forEach.call(bodyEl.querySelectorAll('.site[data-b="' + bi + '"]'), function(x){ x.onclick = function(){ var d = store(key), i = x.getAttribute('data-i'); if(d[i]) delete d[i]; else d[i] = 1; store(key, d); paint(); }; }); paint(); }
+      if(b.k === 'sum'){ var ins = bodyEl.querySelectorAll('.cgSum'); function s(){ var t = 0; Array.prototype.forEach.call(ins, function(i){ t += parseFloat(i.value) || 0; }); bodyEl.querySelector('#cgSumR').innerHTML = 'Total : ' + Math.round(t) + ' € <span class="small">(environ ' + Math.round(t * (parseFloat(localStorage.getItem('tm-jpy-rate')) || 175)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' ¥)</span>'; } Array.prototype.forEach.call(ins, function(i){ i.oninput = s; }); s(); }
+      if(b.k === 'clock'){ var c = bodyEl.querySelector('#cgClk'); function k(){ var v = (c.value || '00:00').split(':'), m = (+v[0]) * 60 + (+v[1]); function f(o){ var t = ((m + o * 60) % 1440 + 1440) % 1440, d = (m + o * 60) >= 1440 ? ' (lendemain)' : ((m + o * 60) < 0 ? ' (veille)' : ''); return ('0' + Math.floor(t / 60)).slice(-2) + ' h ' + ('0' + t % 60).slice(-2) + d; } bodyEl.querySelector('#cgClkR').innerHTML = '🇷🇪 La Réunion : <b>' + f(0) + '</b><br>🇹🇭 Bangkok : <b>' + f(3) + '</b><br>🇯🇵 Japon : <b>' + f(5) + '</b>'; } c.oninput = k; k(); }
+    });
+  }
+  function show(id, tab){ D = cache[id]; D.id = id; titleEl.textContent = D.emoji + ' ' + D.name; tabsEl.innerHTML = ''; var tl = D.tabs ? D.tabs.map(function(t){ return [t.id, t.n]; }) : TABS; tl.forEach(function(t){ var b = document.createElement('button'); b.type = 'button'; b.setAttribute('data-id', t[0]); b.textContent = t[1]; b.onclick = function(){ R(t[0]); }; tabsEl.appendChild(b); }); wrap.classList.add('on'); document.documentElement.style.overflow = 'hidden'; R(tab || tl[0][0]); }
+  window.CityGuide = { open: function(id, tab){ build(); if(cache[id]){ show(id, tab); return; }
+    fetch('data/' + id + '.json').then(function(r){ return r.json(); }).then(function(j){ cache[id] = j; show(id, tab); }).catch(function(){ build(); titleEl.textContent = 'Guide indisponible'; bodyEl.innerHTML = '<p>Impossible de charger ce guide hors ligne pour l’instant. Ouvre l’appli une fois avec du réseau.</p>'; wrap.classList.add('on'); }); } };
 })();

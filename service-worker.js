@@ -6,7 +6,7 @@
    Si vous ajoutez une page ou une image NOUVELLE, ajoutez-la aux listes ci-dessous
    (ou relancez l'outil de conversion) pour qu'elle soit aussi téléchargée d'avance.
 ================================================================================ */
-const CACHE = 'tm-mg-japon-v14';
+const CACHE = 'tm-mg-japon-v15';
 const CORE = [
   "./",
   "index.html",
@@ -16,6 +16,7 @@ const CORE = [
   "tools.js",
   "city.js",
   "data/kyoto.json",
+  "data/reunion.json",
   "zones.json",
   "manifest.json",
   "page1.html",
