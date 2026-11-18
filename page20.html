@@ -10,10 +10,10 @@
     background: #0f1115;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     min-height: 100vh;
-    padding: 24px 0;
+    padding: 6px 0 4px;
     font-family: 'Segoe UI', Arial, sans-serif;
   }
   .page {
@@ -63,9 +63,9 @@
   .btn-next:hover, .btn-restart:hover { box-shadow: 0 8px 22px rgba(211, 84, 0, 0.6); }
 
   /* Barre de navigation sous l'image (hors illustration, jamais de superposition) */
-  .navbar{display:flex;gap:12px;width:100%;max-width:680px;margin:14px auto 0;padding:0 14px;}
-  .navbar .hotspot{position:static;width:auto;height:48px;flex:1;}
-  .navbar .btn-prev{flex:0 0 auto;min-width:140px;}
+  .navbar{display:flex;gap:12px;width:100%;max-width:680px;margin:8px auto 0;padding:0 14px;}
+  .navbar .hotspot{position:static;width:auto;height:38px;flex:1;font-size:14px;}
+  .navbar .btn-prev{flex:0 0 auto;min-width:110px;}
 </style>
 <!-- PWA Mini-guide -->
 <link rel="manifest" href="manifest.json">
