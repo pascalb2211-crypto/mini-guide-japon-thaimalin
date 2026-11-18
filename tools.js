@@ -42,6 +42,7 @@
     h += '</div><label>Autres trajets JR à ajouter (en ¥ : aéroport, Nara, Miyajima, Hakone…)</label><input id="jpOther" type="number" inputmode="numeric" placeholder="0">' +
       '<div id="jpRes"></div>' +
       '<div class="card small">Prix indicatifs arrondis (billet plein tarif, place réservée, train Nozomi), relevés en novembre 2026 : ils varient de quelques centaines de yens selon la saison. ' +
+      'Annoncé : le Nozomi Tokyo – Osaka passera de 14 720 ¥ à 15 420 ¥ pour les billets achetés à partir du 1er juillet 2027. ' +
       'Le JR Pass ne couvre pas les Nozomi ni les Mizuho : avec le pass tu prends Hikari ou Kodama (un peu plus lents), ou tu paies un supplément (environ 4 960 ¥ Tokyo – Kyoto ou Osaka, 6 500 ¥ Tokyo – Hiroshima). ' +
       'Le pass est réservé aux visiteurs étrangers et ne couvre ni les métros ni les compagnies privées. Les prix du pass viennent de JR Group (avril 2026).</div>';
     body.innerHTML = h;
@@ -93,6 +94,8 @@
       '<h4>Kyoto (depuis le 1er mars 2026)</h4><table><tr><th>Prix / pers. / nuit</th><th>Taxe</th></tr><tr><td>moins de 6 000 ¥</td><td>200 ¥</td></tr><tr><td>6 000 à 19 999 ¥</td><td>400 ¥</td></tr><tr><td>20 000 à 49 999 ¥</td><td>1 000 ¥</td></tr><tr><td>50 000 à 99 999 ¥</td><td>4 000 ¥</td></tr><tr><td>100 000 ¥ et plus</td><td>10 000 ¥</td></tr></table>' +
       '<p class="small">Osaka a aussi une taxe de quelques centaines de yens au maximum (rien sous 5 000 ¥ par personne et par nuit).</p>' +
       '<h4>Calcule la tienne</h4><div class="card"><label>Prix de la chambre par nuit (¥, hors taxe de consommation)</label><input id="txP" type="number" inputmode="numeric" placeholder="ex. 14000"><label>Personnes</label><input id="txN" type="number" inputmode="numeric" value="2"><label>Nuits</label><input id="txD" type="number" inputmode="numeric" value="3"><div id="txR" style="margin-top:10px"></div></div>' +
+      '<h4>Taxe de départ du Japon</h4><div class="card small">Depuis le 1er juillet 2026 : <b>3 000 ¥ par personne</b> (avant : 1 000 ¥), déjà ajoutée au prix de ton billet d’avion dans la plupart des cas. Rien à payer sur place.</div>' +
+      '<div class="small">À venir (vers 2028) : une autorisation en ligne « JESTA » avant le vol, payante, montant pas encore fixé.</div>' +
       '<div class="small">Sources : Tokyo Metropolitan Government, Ville de Kyoto, vérifiées en novembre 2026.</div>';
     function calc(){
       var P = parseFloat(body.querySelector('#txP').value) || 0, N = Math.max(1, parseInt(body.querySelector('#txN').value, 10) || 1), D = Math.max(1, parseInt(body.querySelector('#txD').value, 10) || 1), pp = P / N, r = body.querySelector('#txR');
