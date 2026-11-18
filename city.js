@@ -58,9 +58,11 @@
       else if(b.k === 'check'){ h += '<div class="bar a"><b id="cgCb' + bi + '"></b></div><div class="small a" id="cgCn' + bi + '"></div>'; b.items.forEach(function(t, i){ h += '<button type="button" class="card site a" data-b="' + bi + '" data-i="' + i + '"><span>' + t + '</span></button>'; }); }
       else if(b.k === 'sum'){ h += '<h4 class="a">' + b.title + '</h4><div class="card a">'; b.fields.forEach(function(f, i){ h += '<div class="small" style="margin-top:8px">' + f[0] + '</div><input class="cgSum" type="number" inputmode="decimal" value="' + f[1] + '">'; }); h += '<div id="cgSumR" class="res ok"></div></div>'; }
       else if(b.k === 'clock'){ h += '<h4 class="a">Convertisseur d’heure</h4><div class="card a"><div class="small">Il est (heure de La Réunion) :</div><input id="cgClk" type="time" value="20:00"><div id="cgClkR" style="margin-top:10px"></div></div>'; }
+      else if(b.k === 'btn'){ h += '<button type="button" class="btn a cgBtn" data-t="' + b.tool + '" style="width:100%;border:0;font-size:15px;border-radius:999px;padding:13px;color:#fff;font-weight:700;background:linear-gradient(135deg,#d35400,#f0955a)">' + b.label + '</button>'; }
       else if(b.k === 'links'){ h += '<p class="a">Ces liens sont des liens d’affiliation : sans surcoût pour toi, ils aident à faire vivre le guide.</p>'; D.book.forEach(function(x){ h += '<a class="btn a" target="_blank" rel="noopener sponsored" href="' + x[1] + '">' + x[0] + '</a>'; }); }
     });
     bodyEl.innerHTML = h;
+    Array.prototype.forEach.call(bodyEl.querySelectorAll('.cgBtn'), function(x){ x.onclick = function(){ if(window.JaponTools) JaponTools.open(x.getAttribute('data-t')); }; });
     tab.b.forEach(function(b, bi){
       if(b.k === 'check'){ var key = 'chk-' + D.id + '-' + b.key;
         function paint(){ var d = store(key), n = 0; Array.prototype.forEach.call(bodyEl.querySelectorAll('.site[data-b="' + bi + '"]'), function(x){ var on = !!d[x.getAttribute('data-i')]; x.classList.toggle('done', on); if(on) n++; }); bodyEl.querySelector('#cgCb' + bi).style.width = (100 * n / b.items.length) + '%'; bodyEl.querySelector('#cgCn' + bi).textContent = n + ' / ' + b.items.length + ' ' + b.label; }

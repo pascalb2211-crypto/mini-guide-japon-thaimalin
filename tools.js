@@ -1,7 +1,7 @@
 /* Outils Japon Malin : simulateur JR Pass, détaxe, vols depuis La Réunion, taxes de séjour, liens d'affiliation.
    Données vérifiées le 18 novembre 2026 (sources : JR Group / JR Central / Ekitan, Japan Tourism Agency & JNTO, Air Austral, villes de Tokyo et Kyoto). */
 (function(){
-  var CSS = '#jtWrap{position:fixed;inset:0;z-index:100003;background:#0f1115;display:none;flex-direction:column;font-family:"Segoe UI",Arial,sans-serif;color:#fff}#jtWrap.on{display:flex}' +
+  var CSS = '#jtWrap{position:fixed;inset:0;z-index:100005;background:#0f1115;display:none;flex-direction:column;font-family:"Segoe UI",Arial,sans-serif;color:#fff}#jtWrap.on{display:flex}' +
     '#jtTop{display:flex;align-items:center;justify-content:space-between;padding:max(12px,env(safe-area-inset-top)) 16px 10px;font-weight:800;font-size:17px;gap:10px}#jtX{background:#ffffff1f;border:0;color:#fff;border-radius:999px;padding:8px 14px;font-weight:700;font-size:14px;flex:none}' +
     '#jtBody{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:0 16px calc(24px + env(safe-area-inset-bottom));font-size:15px;line-height:1.5}' +
     '#jtBody h4{color:#f0955a;margin:18px 0 6px;font-size:16px}#jtBody p{margin:6px 0}#jtBody .card{background:#1a1d24;border:1px solid #ffffff22;border-radius:14px;padding:12px 14px;margin:10px 0}' +
@@ -140,7 +140,7 @@
 
   function fiches(){
     title.textContent = '📘 Fiches pratiques';
-    var L = [['city_reunion','🇷🇪','Départ de La Réunion','Vols, prix, bagages, escale, heure'],['city_kyoto','🏯','Guide de Kyoto','Temples, itinéraires, bus : tout en un'],['f_gares','🚉','Décodeur des gares','Lignes, quais, sorties, carte IC'],['f_distrib','🥤','Distributeurs','Chaud ou froid, comment ça marche'],['f_toilettes','🚽','Toilettes japonaises','Le tableau de commandes, touche par touche'],['f_consigne','🧳','Consignes à bagages','Calcule le coût de tes valises'],['f_onsen','♨️','Onsen adapté','Tatouages, règles, check-list'],['f_manger','🍜','Manger comme un Japonais','Bons plans et mots à connaître'],['f_secret','⛩️','Le Japon secret','Escapades loin des foules'],['f_insolite','🎎','Expériences insolites','Ta liste à cocher']];
+    var L = [['trouve','🔎','Trouve mon vol','Budget, conseils et recherche pré-remplie'],['city_reunion','🇷🇪','Départ de La Réunion','Vols, prix, bagages, escale, heure'],['city_kyoto','🏯','Guide de Kyoto','Temples, itinéraires, bus : tout en un'],['f_gares','🚉','Décodeur des gares','Lignes, quais, sorties, carte IC'],['f_distrib','🥤','Distributeurs','Chaud ou froid, comment ça marche'],['f_toilettes','🚽','Toilettes japonaises','Le tableau de commandes, touche par touche'],['f_consigne','🧳','Consignes à bagages','Calcule le coût de tes valises'],['f_onsen','♨️','Onsen adapté','Tatouages, règles, check-list'],['f_manger','🍜','Manger comme un Japonais','Bons plans et mots à connaître'],['f_secret','⛩️','Le Japon secret','Escapades loin des foules'],['f_insolite','🎎','Expériences insolites','Ta liste à cocher']];
     body.innerHTML = '<p>Appuie sur une fiche. Les cases cochées sont gardées sur ton téléphone.</p>';
     L.forEach(function(x){ var b = document.createElement('button'); b.type = 'button'; b.className = 'fl'; b.innerHTML = '<span class="e">' + x[1] + '</span><span>' + x[2] + '<small>' + x[3] + '</small></span>'; b.onclick = function(){ window.JaponTools.open(x[0]); }; body.appendChild(b); });
   }
@@ -266,6 +266,55 @@
     ck.bind(); backBtn();
   }
 
-  var TOOLS = { fiches: fiches, f_gares: f_gares, f_distrib: f_distrib, f_toilettes: f_toilettes, f_consigne: f_consigne, f_onsen: f_onsen, f_manger: f_manger, f_secret: f_secret, f_insolite: f_insolite, jrpass: jrpass, detaxe: detaxe, vols: vols, taxes: taxes, affil: affil };
+
+  /* ---------------- Trouve mon vol (conseiller + recherche pré-remplie) ---------------- */
+  function trouve(){
+    title.textContent = '🔎 Trouve mon vol';
+    var d0 = new Date(); d0.setMonth(d0.getMonth() + 5); var iso = function(d){ return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); };
+    body.innerHTML = '<p>Dis-moi d’où tu pars et combien tu veux mettre : Japon Malin te dit si c’est réaliste, comment payer moins cher, et lance la recherche déjà remplie.</p>' +
+      '<div class="card"><label>Je pars de</label><select id="fvO"><option value="RUN">La Réunion (Saint-Denis)</option><option value="PAR">Paris</option><option value="OTH">Autre ville de France</option></select>' +
+      '<label>J’arrive à</label><select id="fvD"><option value="TYO">Tokyo</option><option value="OSA">Osaka (Kansai)</option></select>' +
+      '<label>Départ le (une date approximative suffit)</label><input id="fvDate" type="date" value="' + iso(d0) + '">' +
+      '<label>Durée du séjour</label><select id="fvN"><option value="10">10 jours</option><option value="15" selected>15 jours</option><option value="21">21 jours</option></select>' +
+      '<label>Voyageurs</label><select id="fvP"><option>1</option><option selected>2</option><option>3</option><option>4</option></select>' +
+      '<label>Mon budget vol, aller-retour, par personne (€)</label><input id="fvB" type="number" inputmode="numeric" value="1200">' +
+      '<label>Ce qui compte pour moi</label><select id="fvW"><option value="cheap">Le moins cher possible</option><option value="fast">Le plus rapide</option><option value="bkk">Passer 2 jours à Bangkok</option></select></div>' +
+      '<div id="fvR"></div>';
+    function season(m){ return (m === 7 || m === 8 || m === 12 || m === 1 || m === 4) ? 'haute' : 'basse'; }
+    function calc(){
+      var o = body.querySelector('#fvO').value, dst = body.querySelector('#fvD').value, dt = new Date(body.querySelector('#fvDate').value), n = parseInt(body.querySelector('#fvN').value, 10), px = parseInt(body.querySelector('#fvP').value, 10), bud = parseFloat(body.querySelector('#fvB').value) || 0, w = body.querySelector('#fvW').value;
+      if(isNaN(dt.getTime())) return;
+      var ret = new Date(dt.getTime() + n * 864e5), m = dt.getMonth() + 1, sea = season(m), h = '';
+      var low, ok;
+      if(o === 'RUN'){ low = 1100; ok = 1400; } else { low = 500; ok = 800; }
+      var cls = bud < low ? 'ko' : (bud < ok ? 'ok' : 'ok');
+      var msg = bud < low ? 'Budget très serré : peu probable hors promotion.' : (bud < ok ? 'Budget tendu mais possible, surtout hors vacances et en réservant tôt.' : 'Budget confortable pour ce trajet.');
+      h += '<div class="res ' + cls + '">' + msg + '<br><span class="small">Pour ' + px + ' voyageur' + (px > 1 ? 's' : '') + ' : ' + Math.round(bud * px) + ' € au total. Repère moyen par personne : ' + (o === 'RUN' ? 'environ 1 300 à 1 400 € depuis La Réunion' : 'environ 500 à 900 € hors vacances depuis Paris, plus en haute saison') + '. Prix indicatifs, ils changent chaque jour.</span></div>';
+      h += '<h4>Mon plan Japon Malin</h4><div class="card">';
+      var tips = [];
+      tips.push(sea === 'haute' ? '📅 Ton départ tombe en <b>haute saison</b> : décaler de 2 à 3 semaines peut faire baisser le prix.' : '📅 Ton départ est en <b>saison plus calme</b> : bon moment pour payer moins cher.');
+      tips.push('⏰ Réserve <b>5 à 9 mois à l’avance</b> : réserver 6 semaines avant est souvent le pire moment.');
+      if(o === 'RUN'){ tips.push('🛫 Compare <b>Réunion – Bangkok en direct</b> (Air Austral) puis Bangkok – Japon, et <b>Réunion – Paris – Japon</b>.'); tips.push('🔗 Avec deux billets séparés, ton bagage n’est pas enregistré jusqu’au bout : garde 4 à 5 h de marge.'); }
+      else tips.push('🛫 Compare les départs de <b>plusieurs aéroports</b> et les vols avec une escale, souvent moins chers.');
+      if(dst === 'TYO') tips.push('🔁 Vol « open jaw » : arrive à Tokyo et repars d’Osaka (ou l’inverse) pour éviter de refaire le trajet en Shinkansen.');
+      if(w === 'bkk') tips.push('🌃 Bangkok au retour : 2 nuits sur place, et une nuit près de l’aéroport avant un vol du matin.');
+      if(w === 'fast') tips.push('⚡ Pour aller plus vite, filtre sur « vols directs ou 1 escale courte » : c’est souvent plus cher.');
+      if(w === 'cheap') tips.push('💸 Filtre par prix croissant et regarde aussi les jours voisins : décaler d’un jour peut changer beaucoup.');
+      tips.push('🧳 Vérifie si le tarif inclut un <b>bagage en soute</b> : les tarifs « Light » n’en ont pas.');
+      h += tips.join('<br><br>') + '</div>';
+      var from = o === 'RUN' ? 'RUN' : 'PAR', to = dst, d1 = iso(dt), d2 = iso(ret);
+      var gf = 'https://www.google.com/travel/flights?q=' + encodeURIComponent('Flights from ' + from + ' to ' + to + ' on ' + d1 + ' through ' + d2 + ' economy') ;
+      var ky = 'https://www.kayak.fr/flights/' + from + '-' + to + '/' + d1 + '/' + d2 + '/' + px + 'adults?sort=price_a';
+      h += '<h4>Lance la recherche</h4><a class="btn" target="_blank" rel="noopener sponsored" href="https://fr.trip.com/?Allianceid=9852508&SID=327644129&trip_sub3=D19106369&locale=fr-fr">Trip.com : comparer les vols</a>' +
+        '<a class="btn" style="background:#2a2f3a" target="_blank" rel="noopener" href="' + ky + '">Kayak : ' + from + ' → ' + to + ', dates remplies</a>' +
+        '<a class="btn" style="background:#2a2f3a" target="_blank" rel="noopener" href="' + gf + '">Google Flights : dates remplies</a>';
+      if(o === 'RUN') h += '<a class="btn" style="background:#2a2f3a" target="_blank" rel="noopener" href="https://www.kayak.fr/flights/RUN-BKK/' + d1 + '/' + d2 + '/' + px + 'adults?sort=price_a">Étape 1 : Réunion → Bangkok (direct)</a><a class="btn" style="background:#2a2f3a" target="_blank" rel="noopener" href="https://www.kayak.fr/flights/BKK-' + to + '/' + d1 + '/' + d2 + '/' + px + 'adults?sort=price_a">Étape 2 : Bangkok → ' + (to === 'TYO' ? 'Tokyo' : 'Osaka') + '</a>';
+      h += '<div class="small">Les prix s’affichent sur le site du comparateur, pas ici. Les dates sont pré-remplies : ajuste-les sur place.</div>';
+      body.querySelector('#fvR').innerHTML = h;
+    }
+    body.oninput = calc; body.onchange = calc; calc();
+  }
+
+  var TOOLS = { trouve: trouve, fiches: fiches, f_gares: f_gares, f_distrib: f_distrib, f_toilettes: f_toilettes, f_consigne: f_consigne, f_onsen: f_onsen, f_manger: f_manger, f_secret: f_secret, f_insolite: f_insolite, jrpass: jrpass, detaxe: detaxe, vols: vols, taxes: taxes, affil: affil };
   window.JaponTools = { open: function(n){ if(n.indexOf('app_') === 0){ if(window.JaponApp && JaponApp[n.slice(4)]) JaponApp[n.slice(4)](); return; } if(n.indexOf('city_') === 0){ if(window.CityGuide){ var pr = n.slice(5).split('@'); CityGuide.open(pr[0], pr[1]); } return; } build(); body.oninput = body.onchange = null; if(!TOOLS[n]) return; TOOLS[n](); wrap.classList.add('on'); body.scrollTop = 0; document.documentElement.style.overflow = 'hidden'; } };
 })();
